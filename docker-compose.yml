@@ -1,0 +1,12 @@
+service
+  redis:
+    image: redis-stack:latest
+    container_name: redis
+    restart: always
+    port:
+      '6079:6079'
+    volume:
+      - redis-dat:./
+
+volumes:
+  redis-data:
