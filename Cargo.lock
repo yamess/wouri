@@ -2204,6 +2204,7 @@ dependencies = [
  "ryu",
  "sha1_smol",
  "socket2 0.5.7",
+ "tokio",
  "url",
 ]
 
