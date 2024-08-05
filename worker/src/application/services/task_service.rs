@@ -1,8 +1,8 @@
-use crate::domain::repositories::task_repository::TaskRepository;
 use crate::application::dtos::task_dtos::NewTask;
-use uuid::Uuid;
 use crate::domain::entities::task::Task;
+use crate::domain::repositories::task_repository::TaskRepository;
 use crate::shared::errors::Result;
+use uuid::Uuid;
 
 pub struct TaskService<T: TaskRepository> {
     task_repository: T,
@@ -25,19 +25,25 @@ impl<T: TaskRepository> TaskService<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mockall::predicate::*;
     use crate::domain::repositories::task_repository::MockTaskRepository;
+    use mockall::predicate::*;
 
     #[tokio::test]
     async fn test_save() {
         let mut mock = MockTaskRepository::new();
         mock.expect_save()
-            .with(eq(NewTask { title: "test".to_string() }))
+            .with(eq(NewTask {
+                title: "test".to_string(),
+            }))
             .times(1)
-            .returning(|_| { Ok(Uuid::new_v4()) });
+            .returning(|_| Ok(Uuid::new_v4()));
 
         let service = TaskService::new(mock);
-        let result = service.save(NewTask { title: "test".to_string() }).await;
+        let result = service
+            .save(NewTask {
+                title: "test".to_string(),
+            })
+            .await;
         assert!(result.is_ok());
     }
 
@@ -48,7 +54,7 @@ mod tests {
         mock.expect_get()
             .with(eq(id))
             .times(1)
-            .returning(|_| { Some(Task::new("test".to_string())) });
+            .returning(|_| Some(Task::new("test".to_string())));
 
         let service = TaskService::new(mock);
         let result = service.get(id).await;

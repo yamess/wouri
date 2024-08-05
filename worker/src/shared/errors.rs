@@ -22,9 +22,8 @@ pub enum Error {
     Dependency(#[from] DependencyError),
 }
 
-
 #[derive(Debug, thiserror::Error)]
-pub enum TaskError{
+pub enum TaskError {
     #[error("Task {0} not found")]
     NotFound(String),
     #[error("Task {0} already exists")]
@@ -40,7 +39,7 @@ pub enum TaskError{
 }
 
 #[derive(Debug, thiserror::Error)]
-pub enum DependencyError{
+pub enum DependencyError {
     #[error("Redis error: {0}")]
     RedisError(#[from] RedisError),
     #[error("Serde JSON error: {0}")]

@@ -1,12 +1,12 @@
-use deadpool_redis::Pool;
-use deadpool_redis::redis::AsyncCommands;
-use redis::{RedisResult, transaction};
-use uuid::Uuid;
 use crate::application::dtos::task_dtos::{NewTask, UpdateTask};
 use crate::domain::entities::task::{Task, TaskStatus};
 use crate::domain::repositories::task_repository::TaskRepository;
 use crate::infrastructure::db::connection::establish_connection;
 use crate::shared::errors::{DependencyError, Result, TaskError};
+use deadpool_redis::redis::AsyncCommands;
+use deadpool_redis::Pool;
+use redis::{transaction, RedisResult};
+use uuid::Uuid;
 
 #[derive(Clone)]
 pub struct RedisTaskRepository {
@@ -16,7 +16,10 @@ pub struct RedisTaskRepository {
 
 impl RedisTaskRepository {
     pub fn new(connection_string: &str, pool_size: usize, table: &str) -> Self {
-        Self { pool: establish_connection(connection_string, pool_size), hashset: table.to_string() }
+        Self {
+            pool: establish_connection(connection_string, pool_size),
+            hashset: table.to_string(),
+        }
     }
 }
 
@@ -25,11 +28,12 @@ impl TaskRepository for RedisTaskRepository {
         let mut conn = self.pool.get().await?;
         let task = Task::new(task.title);
         let task_string = serde_json::to_string(&task)?;
-        let _ = conn.set(task.id.to_string(), task_string)
+        let _ = conn
+            .set(task.id.to_string(), task_string)
             .await
             .map_err(|e| {
-            log::error!("Failed to set task in redis: {}", e);
-            return TaskError::CreationFailed(e.to_string());
+                log::error!("Failed to set task in redis: {}", e);
+                return TaskError::CreationFailed(e.to_string());
             })?;
         Ok(task.id)
     }

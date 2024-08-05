@@ -1,7 +1,7 @@
 use crate::infrastructure::web;
 
-mod domain;
 mod application;
+mod domain;
 mod infrastructure;
 mod presentation;
 mod shared;

@@ -1,8 +1,8 @@
-use mockall::automock;
-use uuid::Uuid;
-use crate::application::dtos::task_dtos::{NewTask};
+use crate::application::dtos::task_dtos::NewTask;
 use crate::domain::entities::task::Task;
 use crate::shared::errors::Result;
+use mockall::automock;
+use uuid::Uuid;
 
 #[automock]
 pub trait TaskRepository {
