@@ -1,7 +1,10 @@
 use crate::domain::entities::task::TaskStatus;
+use actix::Message;
 use uuid::Uuid;
+use crate::shared::errors::Result;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Message)]
+#[rtype(result = "Result<Uuid>")]
 pub struct NewTask {
     pub title: String,
 }

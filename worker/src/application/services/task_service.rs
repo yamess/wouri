@@ -4,6 +4,7 @@ use crate::domain::repositories::task_repository::TaskRepository;
 use crate::shared::errors::Result;
 use uuid::Uuid;
 
+#[derive(Debug)]
 pub struct TaskService<T: TaskRepository> {
     task_repository: T,
 }

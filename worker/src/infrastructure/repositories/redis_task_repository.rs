@@ -1,8 +1,8 @@
-use crate::application::dtos::task_dtos::{NewTask};
-use crate::domain::entities::task::{Task};
+use crate::application::dtos::task_dtos::NewTask;
+use crate::domain::entities::task::Task;
 use crate::domain::repositories::task_repository::TaskRepository;
 use crate::infrastructure::db::connection::establish_connection;
-use crate::shared::errors::{Result, TaskError};
+use crate::shared::errors::{DependencyError, Result, TaskError};
 use deadpool_redis::redis::AsyncCommands;
 use deadpool_redis::Pool;
 
@@ -25,9 +25,15 @@ impl RedisTaskRepository {
 
 impl TaskRepository for RedisTaskRepository {
     async fn save(&self, task: NewTask) -> Result<Uuid> {
-        let mut conn = self.pool.get().await?;
+        let mut conn = self.pool.get().await.map_err(|e| {
+            log::error!("Failed to get connection from redis pool: {}", e);
+            return DependencyError::DeadpoolError(e);
+        })?;
         let task = Task::new(task.title);
-        let task_string = serde_json::to_string(&task)?;
+        let task_string = serde_json::to_string(&task).map_err(|e| {
+            log::error!("Failed to serialize task: {}", e);
+            return DependencyError::SerdeJsonError(e);
+        })?;
         let _ = conn
             .set(task.id.to_string(), task_string)
             .await
