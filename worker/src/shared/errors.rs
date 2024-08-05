@@ -2,8 +2,6 @@
 pub enum Error {
     #[error("Failed to parse environment variable {0}")]
     EnvVarError(String),
-    #[error("Pool error: {0}")]
-    PoolError(#[from] r2d2::Error),
     #[error("Redis error: {0}")]
     RedisError(#[from] redis::RedisError),
     #[error("Serde JSON error: {0}")]
@@ -12,6 +10,8 @@ pub enum Error {
     RabbitError(#[from] lapin::Error),
     #[error("Actix error: {0}")]
     ActixError(#[from] actix_web::Error),
+    #[error("Deadpool error: {0}")]
+    DeadpoolError(#[from] deadpool_redis::PoolError),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
