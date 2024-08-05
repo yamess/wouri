@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use crate::application::dtos::task_dtos::NewTask;
 use crate::domain::entities::task::Task;
 use crate::domain::repositories::task_repository::TaskRepository;
@@ -6,11 +7,11 @@ use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct TaskService<T: TaskRepository> {
-    task_repository: T,
+    task_repository: Arc<T>,
 }
 
 impl<T: TaskRepository> TaskService<T> {
-    pub fn new(task_repository: T) -> Self {
+    pub fn new(task_repository: Arc<T>) -> Self {
         Self { task_repository }
     }
 
@@ -39,7 +40,7 @@ mod tests {
             .times(1)
             .returning(|_| Ok(Uuid::new_v4()));
 
-        let service = TaskService::new(mock);
+        let service = TaskService::new(Arc::new(mock));
         let result = service
             .save(NewTask {
                 title: "test".to_string(),
@@ -57,7 +58,7 @@ mod tests {
             .times(1)
             .returning(|_| Some(Task::new("test".to_string())));
 
-        let service = TaskService::new(mock);
+        let service = TaskService::new(Arc::new(mock));
         let result = service.get(id).await;
         assert!(result.is_some());
     }
