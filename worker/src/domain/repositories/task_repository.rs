@@ -1,10 +1,11 @@
 use crate::application::dtos::task_dtos::NewTask;
 use crate::domain::entities::task::Task;
 use crate::shared::errors::Result;
+#[cfg(test)]
 use mockall::automock;
 use uuid::Uuid;
 
-#[automock]
+#[cfg_attr(test, automock)]
 pub trait TaskRepository {
     async fn save(&self, task: NewTask) -> Result<Uuid>;
     async fn get(&self, id: Uuid) -> Option<Task>;

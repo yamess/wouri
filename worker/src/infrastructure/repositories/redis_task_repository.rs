@@ -1,11 +1,11 @@
-use crate::application::dtos::task_dtos::{NewTask, UpdateTask};
-use crate::domain::entities::task::{Task, TaskStatus};
+use crate::application::dtos::task_dtos::{NewTask};
+use crate::domain::entities::task::{Task};
 use crate::domain::repositories::task_repository::TaskRepository;
 use crate::infrastructure::db::connection::establish_connection;
-use crate::shared::errors::{DependencyError, Result, TaskError};
+use crate::shared::errors::{Result, TaskError};
 use deadpool_redis::redis::AsyncCommands;
 use deadpool_redis::Pool;
-use redis::{transaction, RedisResult};
+
 use uuid::Uuid;
 
 #[derive(Clone)]
