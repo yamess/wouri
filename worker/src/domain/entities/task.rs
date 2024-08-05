@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -5,7 +6,6 @@ use uuid::Uuid;
 pub struct Task {
     pub id: Uuid,
     pub title: String,
-    pub description: String,
     pub status: TaskStatus,
     pub created_at: i64,
     pub updated_at: Option<i64>,
@@ -19,4 +19,16 @@ pub enum TaskStatus {
     InProgress,
     #[serde(rename = "completed")]
     Completed,
+}
+
+impl Task {
+    pub fn new(title: String) -> Self {
+        Self {
+            id: Uuid::new_v4(),
+            title,
+            status: TaskStatus::NotStarted,
+            created_at: chrono::Utc::now().timestamp(),
+            updated_at: None,
+        }
+    }
 }
