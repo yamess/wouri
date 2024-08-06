@@ -1,6 +1,8 @@
 
-use actix_web::{HttpResponse, post, Responder, web::{self}};
-use crate::application::dtos::task_dtos::NewTask;
+use actix_web::{get, HttpResponse, post, Responder, web::{self}};
+use actix_web::http::header::ContentType;
+use uuid::Uuid;
+use crate::application::dtos::task_dtos::{GetTask, NewTask};
 use crate::shared::app_state::AppState;
 use crate::shared::errors::Result;
 
@@ -26,6 +28,28 @@ pub async fn submit(task: web::Json<NewTask>, state: web::Data<AppState>) -> Res
         Err(e) => {
             log::error!("Error submitting task: {}", e);
             Ok(HttpResponse::InternalServerError().body("Error submitting task"))
+        }
+    }
+}
+
+#[get("/task/sse/{task_id}")]
+pub async fn notify(task_id: web::Path<(Uuid,)>, state: web::Data<AppState>) -> impl Responder {
+    let task = GetTask {
+        id: task_id.into_inner().0,
+    };
+    let actor = state.task_actor_pool.get_actor();
+    let res = actor.send(task).await;
+    match res {
+        Ok(Some(task)) => {
+            let task = serde_json::to_string(&task).unwrap();
+            HttpResponse::Ok().content_type(ContentType::json()).body(task)
+        }
+        Ok(None) => {
+            HttpResponse::NotFound().finish()
+        }
+        Err(e) => {
+            log::error!("Failed to get task. Cause: {}", e);
+            HttpResponse::InternalServerError().finish()
         }
     }
 }
