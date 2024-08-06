@@ -6,6 +6,7 @@ use crate::application::dtos::task_dtos::{GetTask, NewTask};
 use crate::shared::app_state::AppState;
 use crate::shared::errors::Result;
 
+
 #[post("/task")]
 pub async fn submit(task: web::Json<NewTask>, state: web::Data<AppState>) -> Result<impl Responder> {
     log::info!("Received task submission request");
