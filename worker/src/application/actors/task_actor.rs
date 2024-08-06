@@ -1,11 +1,11 @@
 use std::sync::Arc;
-use crate::application::dtos::task_dtos::{GetTask, NewTask, UpdateTask};
+use crate::application::dtos::task_dtos::{GetTask, NewTask};
 use crate::domain::services::task_service::TaskService;
 use crate::domain::repositories::task_repository::TaskRepository;
 use crate::shared::errors::Result;
 use actix::ActorFutureExt;
 use actix::{
-    Actor, Context, ContextFutureSpawner, Handler, ResponseActFuture, Running, WrapFuture,
+    Actor, Context, Handler, ResponseActFuture, Running, WrapFuture,
 };
 use uuid::Uuid;
 use crate::domain::entities::task::Task;

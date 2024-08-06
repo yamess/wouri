@@ -11,14 +11,12 @@ use uuid::Uuid;
 #[derive(Clone)]
 pub struct RedisTaskRepository {
     pool: Pool,
-    hashset: String,
 }
 
 impl RedisTaskRepository {
-    pub fn new(connection_string: &str, pool_size: usize, table: &str) -> Self {
+    pub fn new(connection_string: &str) -> Self {
         Self {
-            pool: establish_connection(connection_string, pool_size),
-            hashset: table.to_string(),
+            pool: establish_connection(connection_string),
         }
     }
 }
