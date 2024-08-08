@@ -4,12 +4,12 @@ use crate::application::actors::task_actor::TaskActor;
 use crate::domain::repositories::task_repository::TaskRepository;
 
 #[derive(Debug, Clone)]
-pub struct TaskActorPool<T: TaskRepository + Unpin + 'static + Send + Sync> {
+pub struct TaskActorPool<T: TaskRepository + Unpin + 'static> {
     actors: Vec<Addr<TaskActor<T>>>,
     index: Arc<Mutex<usize>>
 }
 
-impl<T: TaskRepository + Unpin + 'static + Send + Sync> TaskActorPool<T> {
+impl<T: TaskRepository + Unpin + 'static> TaskActorPool<T> {
     pub fn new(size: usize, task_repo: Arc<T>) -> Self {
         let mut actors = Vec::with_capacity(size);
 
