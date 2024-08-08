@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use crate::application::dtos::task_dtos::{GetTask, NewTask};
 use crate::shared::app_state::AppState;
 use crate::shared::errors::Result;
@@ -8,6 +9,8 @@ use actix_web::{
     HttpResponse, Responder,
 };
 use uuid::Uuid;
+use crate::domain::repositories::task_repository::TaskRepository;
+use crate::domain::services::task_service::TaskService;
 
 #[post("/task")]
 pub async fn submit(
@@ -33,6 +36,17 @@ pub async fn submit(
             log::error!("Error submitting task: {}", e);
             Ok(HttpResponse::InternalServerError().body("Error submitting task"))
         }
+    }
+}
+
+pub struct ServerEvent<T: TaskRepository> {
+    pub service: TaskService<T>
+}
+
+impl <T: TaskRepository> ServerEvent<T> {
+    pub fn new(task_repo: Arc<T>) -> Self {
+        let service = TaskService::new(task_repo);
+        Self { service }
     }
 }
 
