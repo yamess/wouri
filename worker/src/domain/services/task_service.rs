@@ -1,8 +1,8 @@
-use std::sync::Arc;
 use crate::application::dtos::task_dtos::NewTask;
 use crate::domain::entities::task::Task;
 use crate::domain::repositories::task_repository::TaskRepository;
 use crate::shared::errors::Result;
+use std::sync::Arc;
 use uuid::Uuid;
 
 #[derive(Debug)]

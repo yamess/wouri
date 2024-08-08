@@ -1,9 +1,9 @@
+use crate::domain::entities::task::Task;
 use crate::domain::entities::task::TaskStatus;
+use crate::shared::errors::Result;
 use actix::Message;
 use serde::Deserialize;
 use uuid::Uuid;
-use crate::shared::errors::Result;
-use crate::domain::entities::task::Task;
 
 #[derive(Debug, Clone, PartialEq, Message, Deserialize)]
 #[rtype(result = "Result<Uuid>")]

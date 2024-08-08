@@ -30,7 +30,6 @@ impl RMQConfig {
     }
 }
 
-
 #[derive(Debug, Clone, Deserialize)]
 pub struct Config {
     pub app: AppConfig,

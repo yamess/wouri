@@ -1,7 +1,7 @@
 use crate::presentation::routes;
-use actix_web::middleware::Logger;
-use actix_web::{App, HttpServer, web};
 use crate::shared::app_state::AppState;
+use actix_web::middleware::Logger;
+use actix_web::{web, App, HttpServer};
 
 pub async fn run() -> std::io::Result<()> {
     log::info!("Server is running on http://0.0.0.0:8080");
@@ -14,7 +14,7 @@ pub async fn run() -> std::io::Result<()> {
             .service(
                 web::scope("/api/v1")
                     .configure(routes::task_route::routes)
-                    .configure(routes::probe_route::routes)
+                    .configure(routes::probe_route::routes),
             )
     })
     .bind("0.0.0.0:8080")?

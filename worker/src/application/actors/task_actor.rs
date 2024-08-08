@@ -1,19 +1,17 @@
-use std::sync::Arc;
 use crate::application::dtos::task_dtos::{GetTask, NewTask};
-use crate::domain::services::task_service::TaskService;
+use crate::domain::entities::task::Task;
 use crate::domain::repositories::task_repository::TaskRepository;
+use crate::domain::services::task_service::TaskService;
 use crate::shared::errors::Result;
 use actix::ActorFutureExt;
-use actix::{
-    Actor, Context, Handler, ResponseActFuture, Running, WrapFuture,
-};
+use actix::{Actor, Context, Handler, ResponseActFuture, Running, WrapFuture};
+use std::sync::Arc;
 use uuid::Uuid;
-use crate::domain::entities::task::Task;
 
 #[derive(Debug, Clone)]
 pub struct TaskActor<T: TaskRepository> {
     pub task_repo: Arc<T>,
-    pub name: String
+    pub name: String,
 }
 
 impl<T: TaskRepository> TaskActor<T> {

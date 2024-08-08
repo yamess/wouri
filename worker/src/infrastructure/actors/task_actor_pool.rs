@@ -1,12 +1,12 @@
-use std::sync::{Arc, Mutex};
-use actix::{Actor, Addr};
 use crate::application::actors::task_actor::TaskActor;
 use crate::domain::repositories::task_repository::TaskRepository;
+use actix::{Actor, Addr};
+use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone)]
 pub struct TaskActorPool<T: TaskRepository + Unpin + 'static> {
     actors: Vec<Addr<TaskActor<T>>>,
-    index: Arc<Mutex<usize>>
+    index: Arc<Mutex<usize>>,
 }
 
 impl<T: TaskRepository + Unpin + 'static> TaskActorPool<T> {
@@ -23,7 +23,7 @@ impl<T: TaskRepository + Unpin + 'static> TaskActorPool<T> {
         }
         Self {
             actors,
-            index: Arc::new(Mutex::new(0))
+            index: Arc::new(Mutex::new(0)),
         }
     }
 

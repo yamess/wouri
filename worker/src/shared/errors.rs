@@ -5,7 +5,6 @@ use redis::RedisError;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
-
 #[derive(Debug, thiserror::Error)]
 pub enum TaskError {
     #[error("Task {0} not found")]
