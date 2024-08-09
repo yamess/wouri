@@ -39,17 +39,6 @@ pub async fn submit(
     }
 }
 
-pub struct ServerEvent<T: TaskRepository> {
-    pub service: TaskService<T>
-}
-
-impl <T: TaskRepository> ServerEvent<T> {
-    pub fn new(task_repo: Arc<T>) -> Self {
-        let service = TaskService::new(task_repo);
-        Self { service }
-    }
-}
-
 #[get("/task/sse/{task_id}")]
 pub async fn notify(task_id: web::Path<(Uuid,)>, state: web::Data<AppState>) -> impl Responder {
     let task = GetTask {
